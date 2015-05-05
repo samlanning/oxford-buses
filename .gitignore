@@ -1,4 +1,6 @@
-
-bin
-gen
-.settings/
+oxford-buses/.gradle
+oxford-buses/local.properties
+oxford-buses/.idea/workspace.xml
+oxford-buses/.idea/libraries
+oxford-buses/*/build
+oxford-buses/build

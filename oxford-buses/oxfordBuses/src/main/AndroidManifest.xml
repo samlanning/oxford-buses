@@ -11,8 +11,6 @@
         android:minSdkVersion="9"
         android:targetSdkVersion="17" >
     </uses-sdk>
-s
-
 
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>

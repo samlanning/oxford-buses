@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 17
+    compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "com.samlanning.oxfordbuses"
         minSdkVersion 9
-        targetSdkVersion 17
+        targetSdkVersion 21
     }
 
     buildTypes {
@@ -20,7 +20,7 @@ android {
 
 dependencies {
     compile project(':volley')
-    compile 'com.android.support:support-v4:18.0.0'
+    compile 'com.android.support:support-v4:21.0.0'
     compile 'com.google.android.gms:play-services:+'
     compile files('libs/jcoord-1.0.jar')
 }

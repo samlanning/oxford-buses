@@ -1,6 +1,6 @@
-package uk.co.jakeclarke.oxfordbuses.settings;
+package com.samlanning.oxfordbuses.settings;
 
-import uk.co.jakeclarke.oxfordbuses.R;
+import com.samlanning.oxfordbuses.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.util.Linkify;

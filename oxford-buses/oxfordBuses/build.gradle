@@ -5,7 +5,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "uk.co.jakeclarke.oxfordbuses"
+        applicationId "com.samlanning.oxfordbuses"
         minSdkVersion 9
         targetSdkVersion 17
     }

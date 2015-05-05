@@ -2,7 +2,7 @@
     <Preference 
         android:title="@string/about">
         <intent 
-            android:targetPackage="uk.co.jakeclarke.oxfordbuses"
-            android:targetClass="uk.co.jakeclarke.oxfordbuses.settings.AboutActivity"/>
+            android:targetPackage="com.samlanning.oxfordbuses"
+            android:targetClass="com.samlanning.oxfordbuses.settings.AboutActivity"/>
     </Preference>
 </PreferenceScreen>

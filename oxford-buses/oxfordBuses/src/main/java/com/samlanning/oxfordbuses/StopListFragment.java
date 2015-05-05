@@ -1,8 +1,8 @@
-package uk.co.jakeclarke.oxfordbuses;
+package com.samlanning.oxfordbuses;
 
 import java.util.ArrayList;
 
-import uk.co.jakeclarke.oxfordbuses.StopsProvider.Stop;
+import com.samlanning.oxfordbuses.StopsProvider.Stop;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;

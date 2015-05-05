@@ -1,6 +1,6 @@
-package uk.co.jakeclarke.oxfordbuses.db;
+package com.samlanning.oxfordbuses.db;
 
-import uk.co.jakeclarke.oxfordbuses.StopsProvider.Stop;
+import com.samlanning.oxfordbuses.StopsProvider.Stop;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

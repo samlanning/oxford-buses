@@ -1,8 +1,8 @@
-package uk.co.jakeclarke.oxfordbuses.settings;
+package com.samlanning.oxfordbuses.settings;
 
 import java.util.List;
 
-import uk.co.jakeclarke.oxfordbuses.R;
+import com.samlanning.oxfordbuses.R;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;

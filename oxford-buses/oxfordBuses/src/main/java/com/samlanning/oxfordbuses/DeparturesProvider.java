@@ -1,4 +1,4 @@
-package uk.co.jakeclarke.oxfordbuses;
+package com.samlanning.oxfordbuses;
 
 import java.util.ArrayList;
 
@@ -6,8 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import uk.co.jakeclarke.oxfordbuses.DeparturesProvider.Departures.Bus;
-import uk.co.jakeclarke.oxfordbuses.StopsProvider.Stop;
+import com.samlanning.oxfordbuses.DeparturesProvider.Departures.Bus;
+import com.samlanning.oxfordbuses.StopsProvider.Stop;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;

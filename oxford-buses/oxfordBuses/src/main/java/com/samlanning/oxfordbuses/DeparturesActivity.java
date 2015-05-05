@@ -1,6 +1,6 @@
-package uk.co.jakeclarke.oxfordbuses;
+package com.samlanning.oxfordbuses;
 
-import uk.co.jakeclarke.oxfordbuses.StopsProvider.Stop;
+import com.samlanning.oxfordbuses.StopsProvider.Stop;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;

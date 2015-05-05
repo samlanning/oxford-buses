@@ -4,7 +4,7 @@
     android:id="@+id/departuresfrag"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    class="uk.co.jakeclarke.oxfordbuses.DeparturesFragment"
+    class="com.samlanning.oxfordbuses.DeparturesFragment"
     tools:layout="@layout/departureslist" >
 
 </fragment>

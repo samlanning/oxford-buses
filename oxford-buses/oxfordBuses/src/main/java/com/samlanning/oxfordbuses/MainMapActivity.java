@@ -1,10 +1,10 @@
-package uk.co.jakeclarke.oxfordbuses;
+package com.samlanning.oxfordbuses;
 
 import java.util.HashMap;
 
-import uk.co.jakeclarke.oxfordbuses.StopListFragment.SelectionListener;
-import uk.co.jakeclarke.oxfordbuses.StopsProvider.Stop;
-import uk.co.jakeclarke.oxfordbuses.settings.SettingsActivity;
+import com.samlanning.oxfordbuses.StopListFragment.SelectionListener;
+import com.samlanning.oxfordbuses.StopsProvider.Stop;
+import com.samlanning.oxfordbuses.settings.SettingsActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;

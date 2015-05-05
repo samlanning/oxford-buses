@@ -1,6 +1,6 @@
-package uk.co.jakeclarke.oxfordbuses.settings;
+package com.samlanning.oxfordbuses.settings;
 
-import uk.co.jakeclarke.oxfordbuses.R;
+import com.samlanning.oxfordbuses.R;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.os.Build;

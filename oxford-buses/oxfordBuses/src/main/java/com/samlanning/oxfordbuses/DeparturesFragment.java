@@ -1,8 +1,8 @@
-package uk.co.jakeclarke.oxfordbuses;
+package com.samlanning.oxfordbuses;
 
-import uk.co.jakeclarke.oxfordbuses.DeparturesProvider.Departures.Bus;
-import uk.co.jakeclarke.oxfordbuses.DeparturesProvider.DeparturesUpdateListener;
-import uk.co.jakeclarke.oxfordbuses.StopsProvider.Stop;
+import com.samlanning.oxfordbuses.DeparturesProvider.Departures.Bus;
+import com.samlanning.oxfordbuses.DeparturesProvider.DeparturesUpdateListener;
+import com.samlanning.oxfordbuses.StopsProvider.Stop;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;

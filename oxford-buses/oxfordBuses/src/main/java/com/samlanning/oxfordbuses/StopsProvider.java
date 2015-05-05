@@ -1,4 +1,4 @@
-package uk.co.jakeclarke.oxfordbuses;
+package com.samlanning.oxfordbuses;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,7 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import uk.co.jakeclarke.oxfordbuses.db.StopsDatabase;
+import com.samlanning.oxfordbuses.db.StopsDatabase;
 import uk.me.jstott.jcoord.OSRef;
 import android.content.Context;
 import android.database.SQLException;

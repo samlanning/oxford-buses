@@ -1,10 +1,6 @@
 package com.samlanning.oxfordbuses;
 
-import java.util.HashMap;
-
-import com.samlanning.oxfordbuses.StopListFragment.SelectionListener;
-import com.samlanning.oxfordbuses.StopsProvider.Stop;
-import com.samlanning.oxfordbuses.settings.SettingsActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -15,20 +11,35 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.samlanning.oxfordbuses.StopListFragment.SelectionListener;
+import com.samlanning.oxfordbuses.StopsProvider.Stop;
+import com.samlanning.oxfordbuses.settings.SettingsActivity;
+
+import java.util.HashMap;
 
 public class MainMapActivity extends FragmentActivity {
 
+	private static final LatLng OXFORD_LOCATION = new LatLng(51.7511, -1.2558);
+
+	private ProgressDialog mapLoadingDialog;
+
 	private SupportMapFragment mapFragment;
-	private StopListFragment stopList;
 	private GoogleMap map;
+	private StopListFragment stopList;
+	//private GoogleMap map;
 	private HashMap<Marker, Stop> stopLookup = new HashMap<Marker, Stop>();
 	// bit of a hack there has to be a better way of doing this.
 	private HashMap<Stop, Marker> markerLookup = new HashMap<Stop, Marker>();
@@ -41,8 +52,14 @@ public class MainMapActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		this.setContentView(R.layout.map);
-		this.mapFragment = (SupportMapFragment) this
-				.getSupportFragmentManager().findFragmentById(R.id.map);
+
+		mapLoadingDialog = new ProgressDialog(this);
+		mapLoadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		mapLoadingDialog.setMessage("Loading Map...");
+		mapLoadingDialog.setIndeterminate(true);
+		mapLoadingDialog.setCanceledOnTouchOutside(false);
+		mapLoadingDialog.show();
+
 
 		if (this.findViewById(R.id.listframe) != null) {
 			this.hasDoublePanel = true;
@@ -50,21 +67,19 @@ public class MainMapActivity extends FragmentActivity {
 			this.stopList = new StopListFragment();
 
 			FragmentTransaction transaction = MainMapActivity.this
-					.getSupportFragmentManager().beginTransaction();
+				.getSupportFragmentManager().beginTransaction();
 
 			transaction.add(R.id.listframe, this.stopList);
 			transaction.setTransition(FragmentTransaction.TRANSIT_NONE);
 			transaction.commit();
 		}
 
-		setUpMapIfNeeded();
+		scheduleSetupMapIfNeeded();
 
 	}
 
 	protected void onStart() {
 		super.onStart();
-
-		setUpMapIfNeeded();
 	}
 
 	@Override
@@ -86,7 +101,7 @@ public class MainMapActivity extends FragmentActivity {
 				this.wasRefreshRequested = true;
 			} else {
 				Toast.makeText(this, R.string.getting_stops_in_progress,
-						Toast.LENGTH_SHORT).show();
+					Toast.LENGTH_SHORT).show();
 			}
 			return true;
 		} else if (item.getItemId() == R.id.listbutton) {
@@ -106,7 +121,7 @@ public class MainMapActivity extends FragmentActivity {
 
 	/**
 	 * Loads up the relevant departures.
-	 * 
+	 *
 	 * @param s
 	 */
 	private void showDepartures(Stop s) {
@@ -114,10 +129,10 @@ public class MainMapActivity extends FragmentActivity {
 			DeparturesFragment departures = new DeparturesFragment();
 			departures.setStop(s);
 			FragmentTransaction transaction = MainMapActivity.this
-					.getSupportFragmentManager().beginTransaction();
+				.getSupportFragmentManager().beginTransaction();
 			transaction.replace(R.id.listframe, departures);
 			transaction
-					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+				.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 			// doesn't do anything for some reason.
 			transaction.setBreadCrumbTitle(R.string.departures);
 			transaction.addToBackStack(null);
@@ -135,9 +150,9 @@ public class MainMapActivity extends FragmentActivity {
 			StopListFragment favourites = new StopListFragment() {
 				@Override
 				public View onCreateView(LayoutInflater inflater,
-						ViewGroup container, Bundle savedInstanceState) {
+										 ViewGroup container, Bundle savedInstanceState) {
 					View v = super.onCreateView(inflater, container,
-							savedInstanceState);
+						savedInstanceState);
 
 					// allows us to refresh the source when departures have
 					// gone.
@@ -155,115 +170,155 @@ public class MainMapActivity extends FragmentActivity {
 			});
 
 			FragmentTransaction transaction = this.getSupportFragmentManager()
-					.beginTransaction();
+				.beginTransaction();
 			transaction.replace(R.id.listframe, favourites);
 			transaction = transaction
-					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-					.setBreadCrumbTitle(R.string.favourites)
-					.addToBackStack(null);
+				.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+				.setBreadCrumbTitle(R.string.favourites)
+				.addToBackStack(null);
 			transaction.commit();
 		} else {
 			Intent i = new Intent(MainMapActivity.this,
-					FavouriteStopsActivity.class);
+				FavouriteStopsActivity.class);
 			this.startActivity(i);
 		}
 	}
 
+	private void scheduleSetupMapIfNeeded() {
+		new Thread() {
+			@Override
+			public void run() {
+				setUpMapIfNeeded();
+			}
+		}.start();
+	}
+
 	private void setUpMapIfNeeded() {
-		// Do a null check to confirm that we have not already instantiated the
-		// map.
-		if (map == null) {
-			this.map = this.mapFragment.getMap();
-			// Check if we were successful in obtaining the map.
-			if (map != null) {
-				// The Map is verified. It is now safe to manipulate the map.
-				this.map.setMyLocationEnabled(true);
+		// Prepare Fragment
+		if (this.mapFragment == null) {
+			this.mapFragment = new SupportMapFragment();
 
-				this.stopManager = new StopsProvider(this,
-						new StopsProvider.StopUpdateListener() {
+			final RelativeLayout mapContainer = (RelativeLayout) this.findViewById(R.id.map_container);
 
-							@Override
-							void onUpdate(StopsProvider stopMapManager) {
-								stopLookup.clear();
-								markerLookup.clear();
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
 
-								Stop[] stops = stopMapManager.getStops();
+					MainMapActivity.this.getSupportFragmentManager().beginTransaction().add(mapContainer.getId(), MainMapActivity.this.mapFragment).commit();
 
-								if (hasDoublePanel) {
-									stopList.setStops(stops);
-								}
+					MainMapActivity.this.mapFragment.getMapAsync(new OnMapReadyCallback() {
+						@Override
+						public void onMapReady(final GoogleMap map) {
+							MainMapActivity.this.map = map;
 
-								for (int i = 0; i < stops.length; i++) {
-									Stop s = stops[i];
+							map.setMyLocationEnabled(true);
 
-									Marker m = map
-											.addMarker(new MarkerOptions()
+							// Zoom in on oxford to begin with
+							CameraPosition cameraPosition = new CameraPosition.Builder()
+								.target(OXFORD_LOCATION)      // Sets the center of the map to Mountain View
+								.zoom(16)                   // Sets the zoom
+								.build();
+
+							map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+							MainMapActivity.this.stopManager = new StopsProvider(MainMapActivity.this,
+								new StopsProvider.StopUpdateListener() {
+
+									@Override
+									void onUpdate(StopsProvider stopMapManager) {
+										stopLookup.clear();
+										markerLookup.clear();
+
+										Stop[] stops = stopMapManager.getStops();
+
+										if (hasDoublePanel) {
+											stopList.setStops(stops);
+										}
+
+										for (int i = 0; i < stops.length; i++) {
+											Stop s = stops[i];
+
+											Marker m = map
+												.addMarker(new MarkerOptions()
 													.position(s.latlong)
 													.title(s.Name)
 													.snippet(s.Naptan));
-									stopLookup.put(m, s);
-									markerLookup.put(s, m);
-								}
+											stopLookup.put(m, s);
+											markerLookup.put(s, m);
+										}
 
-								if (wasRefreshRequested) {
-									Toast.makeText(MainMapActivity.this,
-											R.string.getting_stops_complete,
+										if (wasRefreshRequested) {
+											Toast.makeText(MainMapActivity.this,
+												R.string.getting_stops_complete,
+												Toast.LENGTH_LONG).show();
+											wasRefreshRequested = false;
+										}
+
+									}
+
+									@Override
+									void onError(StopsProvider stopMapManager) {
+										Toast.makeText(MainMapActivity.this,
+											R.string.getting_stops_err,
 											Toast.LENGTH_LONG).show();
-									wasRefreshRequested = false;
+
+										wasRefreshRequested = false;
+									}
+
+								});
+
+							// setup our listeners.
+
+							if (MainMapActivity.this.hasDoublePanel) { // tablet actions.
+								MainMapActivity.this.stopList.setSelectionListener(new SelectionListener() {
+
+									@Override
+									void onSelection(Stop selection) {
+										tapListItem(selection);
+									}
+
+								});
+
+							}
+
+							map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+
+								@Override
+								public void onInfoWindowClick(Marker marker) {
+
+									Stop s = stopLookup.get(marker);
+									showDepartures(s);
 								}
 
+							});
+
+							// Discard Dialog Box
+							if (mapLoadingDialog != null) {
+								mapLoadingDialog.dismiss();
+								mapLoadingDialog = null;
 							}
-
-							@Override
-							void onError(StopsProvider stopMapManager) {
-								Toast.makeText(MainMapActivity.this,
-										R.string.getting_stops_err,
-										Toast.LENGTH_LONG).show();
-
-								wasRefreshRequested = false;
-							}
-
-						});
-
-				// setup our listeners.
-
-				if (this.hasDoublePanel) { // tablet actions.
-					this.stopList.setSelectionListener(new SelectionListener() {
-
-						@Override
-						void onSelection(Stop selection) {
-							tapListItem(selection);
 						}
-
 					});
 
 				}
+			});
 
-				this.map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 
-					@Override
-					public void onInfoWindowClick(Marker marker) {
-
-						Stop s = stopLookup.get(marker);
-						showDepartures(s);
-					}
-
-				});
-			}
 		}
 
 	}
 
 	/**
 	 * The list tap item behaviour.
-	 * 
+	 *
 	 * @param selection
 	 */
 	private void tapListItem(Stop selection) {
 		Marker m = markerLookup.get(selection);
 		if (!m.isInfoWindowShown()) { // one tap for zoom
 			m.showInfoWindow();
-			map.animateCamera(CameraUpdateFactory.newLatLng(selection.latlong));
+			if (map != null)
+				map.animateCamera(CameraUpdateFactory.newLatLng(selection.latlong));
 		} else { // two taps for show departures.
 			showDepartures(selection);
 		}

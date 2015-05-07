@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, Menu!</string>
-    <string name="app_name">Oxford buses</string>
+    <string name="app_name">Oxford Buses</string>
+
+    <!-- MainMapActivity -->
+    <string name="map_loading">Preparing Map, Please Wait...</string>
+
+
     <string name="settings">Settings</string>
     <string name="legalnotices">Legal Notices</string>
     <string name="about">About</string>

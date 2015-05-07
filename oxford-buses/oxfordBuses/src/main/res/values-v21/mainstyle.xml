@@ -3,6 +3,8 @@
     <color name="primary">#3F51B5</color>
     <color name="primary_dark">#303F9F</color>
     <color name="accent">#FF5722</color>
+    <color name="map_loading_background_color">@color/primary_dark</color>
+    <color name="map_loading_text_color">#ffffff</color>
 	<style name="LightThemeSelector" parent="android:Theme.Material.Light">
         <!-- Main theme colors -->
         <!--   your app branding color for the app bar -->

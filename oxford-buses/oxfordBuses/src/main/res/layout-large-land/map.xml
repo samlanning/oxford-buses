@@ -19,11 +19,32 @@
     </FrameLayout>
 
     <RelativeLayout
-        android:id="@+id/map_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
-        <requestFocus/>
+
+        <RelativeLayout
+            android:id="@+id/map_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <requestFocus/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/map_loader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/map_loading_background_color"
+            >
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="@string/map_loading"
+                android:gravity="center"
+                android:textColor="@color/map_loading_text_color"
+                android:textSize="16dp"
+                />
+        </RelativeLayout>
     </RelativeLayout>
 
 

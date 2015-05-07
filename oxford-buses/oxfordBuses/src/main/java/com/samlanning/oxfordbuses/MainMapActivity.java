@@ -11,6 +11,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -34,8 +37,6 @@ public class MainMapActivity extends FragmentActivity {
 
 	private static final LatLng OXFORD_LOCATION = new LatLng(51.7511, -1.2558);
 
-	private ProgressDialog mapLoadingDialog;
-
 	private SupportMapFragment mapFragment;
 	private GoogleMap map;
 	private StopListFragment stopList;
@@ -52,13 +53,6 @@ public class MainMapActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		this.setContentView(R.layout.map);
-
-		mapLoadingDialog = new ProgressDialog(this);
-		mapLoadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		mapLoadingDialog.setMessage("Loading Map...");
-		mapLoadingDialog.setIndeterminate(true);
-		mapLoadingDialog.setCanceledOnTouchOutside(false);
-		mapLoadingDialog.show();
 
 
 		if (this.findViewById(R.id.listframe) != null) {
@@ -292,11 +286,12 @@ public class MainMapActivity extends FragmentActivity {
 
 							});
 
-							// Discard Dialog Box
-							if (mapLoadingDialog != null) {
-								mapLoadingDialog.dismiss();
-								mapLoadingDialog = null;
-							}
+							// Hide Loader
+							AlphaAnimation anim = new AlphaAnimation(1.0f, 0.0f);
+							anim.setDuration(1000);
+							View mapLoader = MainMapActivity.this.findViewById(R.id.map_loader);
+							mapLoader.startAnimation(anim);
+							mapLoader.setVisibility(View.INVISIBLE);
 						}
 					});
 

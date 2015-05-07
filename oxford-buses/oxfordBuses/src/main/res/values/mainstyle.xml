@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="map_loading_background_color">#eee</color>
+    <color name="map_loading_text_color">#333</color>
     <style name="LightThemeSelector" parent="android:Theme.Light">
     </style>
 </resources>
